@@ -17,7 +17,8 @@ var translator = require('../public/src/modules/translator');
 
 var transports = {
 	sendmail: nodemailer.createTransport(sendmailTransport()),
-	gmail: undefined
+	gmail: undefined,
+	qq: undefined
 };
 
 var app;
@@ -29,13 +30,16 @@ var fallbackTransport;
 
 		// Enable Gmail transport if enabled in ACP
 		if (parseInt(meta.config['email:GmailTransport:enabled'], 10) === 1) {
-			fallbackTransport = transports.gmail = nodemailer.createTransport(smtpTransport({
-				host: 'smtp.gmail.com',
+			fallbackTransport = transports.qq = nodemailer.createTransport(smtpTransport({
+				domains: [
+					"qq.com"
+				],
+				host: 'smtp.qq.com',
 				port: 465,
 				secure: true,
 				auth: {
-					user: meta.config['email:GmailTransport:user'],
-					pass: meta.config['email:GmailTransport:pass']
+					user: "1414918086@qq.com",
+					pass: "ffvctafwrachghdg"
 				}
 			}));
 		} else {

@@ -253,6 +253,7 @@ define('forum/topic/posts', [
 		posts.find('[component="post/content"] img:not(.not-responsive)').addClass('img-responsive');
 		app.createUserTooltips(posts);
 		app.replaceSelfLinks(posts.find('a'));
+		Posts.WrapLinks(posts);
 		utils.addCommasToNumbers(posts.find('.formatted-number'));
 		utils.makeNumbersHumanReadable(posts.find('.human-readable-number'));
 		posts.find('.timeago').timeago();
@@ -340,7 +341,7 @@ define('forum/topic/posts', [
 				image.attr('src', image.attr('data-src'));
 				image.removeAttr('data-src');
 			});
-		}, 250);
+		}, 10);
 	};
 
 	Posts.wrapImagesInLinks = function (posts) {
@@ -358,8 +359,31 @@ define('forum/topic/posts', [
 			}
 
 			if (!$this.parent().is('a')) {
-				$this.wrap('<a href="' + src + '" target="_blank">');
+				$this.wrap('<a href="javascript: void(0);" class="img-wrap-custom" target="_blank">');
+				$this.parent().on("click", function (e) {
+					console.log(src, $this[0].width.toString(), $this[0].height.toString());
+					if (window.MaibaJsBridge) {
+						window.MaibaJsBridge.handleShowBigPicture(src, $this[0].width.toString(), $this[0].height.toString());
+					}
+				});
 			}
+		});
+	};
+
+	Posts.WrapLinks = function (posts) {
+		posts.find('[component="post/content"] a').each(function() {
+			var list = $(this);
+			list.each(function() {
+				var $this = $(this);
+				var url = $this.attr("href");
+				$this.attr("href", "javascript:void(0);");
+				$this.on("click", function() {
+					console.log(url);
+					if (window.MaibaJsBridge) {
+						window.MaibaJsBridge.useExplorerToOpenURL(url);
+					}
+				});
+			});
 		});
 	};
 

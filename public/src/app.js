@@ -105,9 +105,15 @@ app.cacheBuster = null;
 				var payload = {
 					next: config.relative_path + '/'
 				};
-
+				if(window.MaibaJsBridge && window.MaibaJsBridge.os) {
+					console.log('remove cookie ...');
+					window.MaibaJsBridge.removeCookie();
+				}		
 				$(window).trigger('action:app.loggedOut', payload);
 				window.location.href = payload.next;
+			},
+			error: function(XMLHttpRequest, err) {
+				console.log(XMLHttpRequest, err);
 			}
 		});
 	};

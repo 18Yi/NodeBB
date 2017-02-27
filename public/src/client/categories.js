@@ -5,6 +5,16 @@
 define('forum/categories', ['components', 'translator'], function (components, translator) {
 	var	categories = {};
 
+	/*$('[component="categories/category"]').find('h2>a').each(function() {
+		var url = $(this).attr('href');
+		$(this).on('click', function() {
+			if (window.MaibaJsBridge) {
+				window.MaibaJsBridge.setScreenFull();
+			}
+			console.log('setScreenFull: ', url);
+		});
+	});*/
+
 	$(window).on('action:ajaxify.start', function (ev, data) {
 		if (ajaxify.currentPage !== data.url) {
 			socket.removeListener('event:new_post', categories.onNewPost);
